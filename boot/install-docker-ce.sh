@@ -1,7 +1,8 @@
+#!/bin/bash
+sudo apt-get remove docker docker-engine docker.io
 sudo apt-get update
-apt-get install apt-transport-https ca-certificates software-properties-common
-curl -fsSL https://yum.dockerproject.org/gpg | sudo apt-key add -
-echo "deb https://download.docker.com/linux/raspbian/ stretch stable" > /etc/apt/sources.list.d/docker.list
-apt install --no-install-recommends docker-ce
-systemctl enable docker.service
-systemctl start docker.service
+sudo apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+echo "deb [arch=armhf] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
+sudo apt-get update
+sudo apt-get install docker-ce
