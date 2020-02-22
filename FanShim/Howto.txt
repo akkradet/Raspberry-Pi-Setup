@@ -1,0 +1,5 @@
+git clone https://github.com/pimoroni/fanshim-python ~/FanShim
+cd ~/FanShim/fanshim-python
+sudo ./install.sh
+
+@reboot /usr/bin/env python3 ~/FanShim/autofanshim.py > /dev/null &

@@ -1,0 +1,7 @@
+> sudo nano /etc/dhcpcd.conf
+
+# Custom static IP address for eth0.
+interface eth0
+static ip_address=192.168.11.199/24
+static routers=192.168.11.254
+static domain_name_servers=192.168.12.12 8.8.8.8

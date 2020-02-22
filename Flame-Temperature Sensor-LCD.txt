@@ -1,0 +1,96 @@
+Makes sure you have rpi with raspbian OS installed in it.
+then,  
+Before start programming with python in RPi you must do this;
+ >sudo apt-get update
+ >sudo apt-get upgrade
+ >sudo apt-get dist-upgrade
+note: it takes time to finish, so just relax. reboot after completing the updates
+
+Programming the DHT11 With Python
+But first do this:
+1. download Adafruit DHT11 Python library using git
+	>sudo apt-get install git-core
+
+2. download & install the Adafruit DHT11 library
+	>git clone https://github.com/adafruit/Adafruit_Python_DHT.git
+
+3. Change directories with:
+	>cd Adafruit_Python_DHT
+	>sudo apt-get install build-essential python-dev
+
+4. Then install the library with:
+	>sudo python setup.py install
+
+reference: http://www.circuitbasics.com/raspberry-pi-i2c-lcd-set-up-and-programming
+install i2c-tools and smbus
+>sudo apt-get install i2c-tools
+>sudo apt-get install python-smbus
+
+to get the buss address
+>i2cdetect -y 1
+
+
+PINOUTS:
+GPIO4 = rpi.pin7 -temperature sensor
+GPIO17 = rpi.pin11 -flame sensor
+
+GPIO2 = rpi.pin3 -i2c.lcd pin: SDA
+GPIO3 = rpi.pin5 -i2c.lcd pin: SCL
+
+RPI.5V = rpi.pin4
+RPI.GND= rpi.pin6
+
+
+
+PYTHON CODES:
+
+#!/usr/bin/python
+import RPi.GPIO as GPIO
+import sys
+import time
+import Adafruit_DHT  #library for temperature sensor
+import lcddriver  #library for displaying LCD
+import socket #library for getting LAN IP
+import fcntl #library for getting LAN IP
+import struct #library for getting LAN IP
+import requests #library for getting WAN IP
+
+GPIO.setwarnings(False)
+
+#GPIO SETUP
+FlameSensor = 17
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(FlameSensor, GPIO.IN)
+
+lcd = lcddriver.lcd()
+   
+#for setting and getting LAN IP
+def get_ip_address(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(),
+        0x8915, 
+        struct.pack('256s', ifname[:15])
+    )[20:24])
+
+lcd.lcd_clear()
+
+while True:
+    humidity, temperature = Adafruit_DHT.read_retry(11, 4)
+    if (GPIO.input(FlameSensor)):
+        lcd.lcd_clear()
+        lcd.lcd_display_string("Date: %s" %time.strftime("%m/%d/%Y"), 1)
+        lcd.lcd_display_string("Temperature: %d%s C" % (temperature, chr(223)), 2)
+        lcd.lcd_display_string("Humidity: %d%%" % humidity, 3)
+        lcd.lcd_display_string("Flame Detected",4)
+    else:
+        lcd.lcd_clear()
+        lcd.lcd_display_string("Date: %s" %time.strftime("%m/%d/%Y"), 1)
+        lcd.lcd_display_string("Temperature: %d%s C" % (temperature, chr(223)), 2)
+        lcd.lcd_display_string("Humidity: %d%%" % humidity, 3)
+        lcd.lcd_display_string("IP: %s" %requests.get("http://ipecho.net/plain?").text,4)
+    
+    #time.sleep(1)
+    #lcd.lcd_clear()
+    
+GPIO.cleanup()
