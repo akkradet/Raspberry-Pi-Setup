@@ -1,0 +1,6 @@
+hdmi_drive=2 
+config_hdmi_boost=4 
+hdmi_group=1 
+hdmi_mode=35 
+hdmi_force_hotplug=1 
+disable_overscan=0
