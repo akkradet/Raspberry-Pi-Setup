@@ -16,7 +16,7 @@ SECURE_MYSQL=$(expect -c "
 set timeout 10
 spawn mysql_secure_installation
 expect \"Enter current password for root (enter for none):\"
-send \"$MYSQLROOTPASSWORD\r\"
+send \"root\r\"
 expect \"Change the root password?\"
 send \"n\r\"
 expect \"Remove anonymous users?\"
@@ -32,30 +32,12 @@ expect eof
  
 echo "$SECURE_MYSQL"
 
+sudo apt install -y phpmyadmin
+#Allow phpmyadmin to manage all databases
+mysql -e "CREATE USER 'root'@'localhost' IDENTIFIED BY 'root';"
+mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;"
+mysql -e "FLUSH PRIVILEGES;"
+sudo systemctl restart apache2
 
-DATABASE_PASS="root"
-
-COMMAND="sudo apt install -y phpmyadmin"
-service mysql start
-
-echo '********************************************************************'
-echo "$COMMAND"
-echo '********************************************************************'
-
-RUN=$(expect -c "
-set timeout 10
-spawn ${COMMAND}
-expect \"Configure database for phpmyadmin with dbconfig-common? \[yes/no\]\"
-send \"yes\r\"
-expect \"MySQL application password for phpmyadmin:\"
-send \"${DATABASE_PASS}\r\"
-expect \"Password confirmation:\"
-send \"${DATABASE_PASS}\r\"
-expect \"Web server to reconfigure automatically:\"
-send \"\r\"
-expect eof
-")
-
-echo "$RUN"
 
 echo '********************************************************************'
