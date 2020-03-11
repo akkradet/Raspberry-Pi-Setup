@@ -1,6 +1,18 @@
 hdmi_drive=2 
-config_hdmi_boost=4 
-hdmi_group=1 
-hdmi_mode=35 
+config_hdmi_boost=4
+# 640x480
+#hdmi_group=1
+#hdmi_mode=1
+# 800x600 Fatshark HD1/2/3 (4:3)
+#hdmi_group=2
+#hdmi_mode=9 
+# 1280x1024
+hdmi_group=2
+hdmi_mode=35
+# 1024x768
+#hdmi_group=2
+#hdmi_mode=16 
 hdmi_force_hotplug=1 
 disable_overscan=0
+
+wpa_passphrase "OFFICE-F2" "bkkr2019" >> /etc/wpa_supplicant/wpa_supplicant.conf
