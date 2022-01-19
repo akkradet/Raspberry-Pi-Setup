@@ -1,4 +1,4 @@
-#sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
+sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
 
 
 @lxpanel --profile LXDE-pi
@@ -9,3 +9,7 @@
 @xset s off
 @xset -dpms
 @chromium-browser --noerrdialogs --disable-component-update --disable-infobars  --kiosk http://192.168.11.163/quality_control/ --incognito
+
+sudo nano /home/pi/.bashrc
+
+DISPLAY=:0 xrandr --output HDMI-1 --rotate left
